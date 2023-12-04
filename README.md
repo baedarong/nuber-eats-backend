@@ -4,10 +4,10 @@
 
 # 2 GRAPHQL API
 
-## TypeScript 및 GraphQL의 성능 활용
-
     패키지 설치
     npm i @nestjs/graphql @nestjs/apollo @apollo/server graphql
+
+## TypeScript 및 GraphQL의 성능 활용
 
 **개요**  
 Nest는 GraphQL 애플리케이션을 구축하는 두 가지 방법, 즉 code first 및 schema first을 제공합니다.
@@ -41,12 +41,14 @@ typePaths 속성은 GraphQLModule이 작성할 GraphQL SDL 스키마 정의 파�
 이러한 파일은 메모리에 결합됩니다.이를 통해 스키마를 여러 파일로 분할하고 해당 resolver 근처에서 찾을 수 있습니다.  
 https://docs.nestjs.com/graphql/quick-start#schema-first
 
-**Code first resolver**  
+## **Code first resolver**
+
 Code first방식에서 resolver 클래스는 resolver 함수를 정의하고 Query type을 생성합니다.  
 여러 해석기 클래스를 정의할 수 있습니다. Nest는 런타임에 이들을 결합합니다.  
 https://docs.nestjs.com/graphql/resolvers#code-first-resolver
 
-**Object types (@ObjectTypes)**  
+## **Object types (@ObjectTypes)**
+
 GraphQL 스키마의 대부분의 정의는 object types입니다.  
 정의하는 각 object type은 응용 프로그램 클라이언트가 상호 작용해야 하는 도메인 객체를 나타내야 합니다.  
 이 경우 code first 접근 방식을 사용하여 TypeScript 클래스를 사용하여 스키마를 정의하고 TypeScript 데코레이터를 사용하여 해당 클래스의 field에 주석을 추가합니다.  
@@ -58,9 +60,40 @@ https://studio.apollographql.com/sandbox/explorer
 GraphQL Playground IDE  
 https://github.com/graphql/graphql-playground#installation
 
-type이나 returns를 쓸 때, 사용하지 않았다고 타입스크립트가 경고를 띄우는 걸 무시하고 싶다면  
-.eslintrc.js에 rules에 아래 룰을 추가해주시면 됩니다.
+## Args decorator
+
+@Args() 데코레이터를 사용하여 메서드 핸들러에서 사용할 요청에서 인수를 추출합니다. 이것은 REST 경로 매개변수 인수 추출과 매우 유사한 방식으로 작동합니다.
 
 ```
-'@typescript-eslint/no-unused-vars': 'off'
+@Args('id') id: string
 ```
+
+https://docs.nestjs.com/graphql/resolvers#args-decorator-options
+
+## Input Type (@InputType)
+
+Mutation이 객체를 argument로 취해야 하는 경우 Input type을 만들 수 있습니다.  
+Input type은 argument로 전달할 수 있는 특수한 유형의 객체이다.
+
+```
+@InputType()
+export class UpvotePostInput {
+	@Field()
+	postId: number;
+}
+```
+
+https://docs.nestjs.com/graphql/mutations#code-first
+
+## Input Type과 ArgsType의 차이점
+
+@InputType사용  
+`@Args('createRestaurantInput') createRestaurantInput: createRestaurantInput  `
+
+@ArgsType사용  
+`@Args() createRestaurantInput: CreateRestaurantInput`
+
+## class-validator, class-transformer 설치
+
+`  npm i class-validator class-transformer
+ `
