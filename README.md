@@ -1,16 +1,8 @@
-## 1 INTRODUCTION
+# 1 INTRODUCTION
 
-누버 이츠 클론 코딩 - Backend using nestJS
+누버 이츠 클론 코딩 - Backend using Node.js framework
 
 # 2 GRAPHQL API
-
-    패키지 설치
-    npm i @nestjs/graphql @nestjs/apollo @apollo/server graphql
-
-## TypeScript 및 GraphQL의 성능 활용
-
-**개요**  
-Nest는 GraphQL 애플리케이션을 구축하는 두 가지 방법, 즉 code first 및 schema first을 제공합니다.
 
 **GraphQL 및 TypeScript 시작하기**  
 GraphQL은 API를 위한 강력한 쿼리 언어(Query Language)이자, 기존 데이터로 쿼리를 수행하기 위한 런타임(Runtime)입니다. 또한, REST API에서 일반적으로 발견되는 많은 문제(Over-fetching, Under-fetching 등)를 해결하는 접근 방식입니다.
@@ -19,10 +11,19 @@ GraphQL은 API를 위한 강력한 쿼리 언어(Query Language)이자, 기존 �
 forRoot()를 통해 설정한 옵션은 ApolloServer 생성자에 전달됩니다.  
 https://docs.nestjs.com/graphql/quick-start#getting-started-with-graphql--typescript
 
+@nestjs/graphql 패키지 설치
+
+    npm i @nestjs/graphql @nestjs/apollo @apollo/server graphql
+
+## TypeScript 및 GraphQL의 활용
+
+**개요**  
+Nest는 GraphQL 애플리케이션을 구축하는 두 가지 방법, 즉 code first 및 schema first을 제공합니다.
+
 **Code first (GraphQL스키마를 자동으로 생성)**  
 code first 접근 방식에서는 데코레이터와 TypeScript 클래스를 사용하여 해당 GraphQL 스키마(schema.graphql파일)를 생성합니다.  
 code first 접근 방식을 사용하려면 먼저 옵션 객체에 autoSchemaFile 속성을 추가하세요.  
-autoSchemaFile 속성 값은 자동으로 생성된 스키마가 생성될 경로입니다.또는 메모리에서 즉석에서 스키마를 생성할 수 있습니다.  
+autoSchemaFile 속성 값은 자동으로 생성된 스키마가 생성될 경로입니다. 또는 메모리에서 즉석에서 스키마를 생성할 수 있습니다.  
 이를 활성화하려면 autoSchemaFile 속성을 true로 설정하십시오.
 
 ```
@@ -53,12 +54,6 @@ GraphQL 스키마의 대부분의 정의는 object types입니다.
 정의하는 각 object type은 응용 프로그램 클라이언트가 상호 작용해야 하는 도메인 객체를 나타내야 합니다.  
 이 경우 code first 접근 방식을 사용하여 TypeScript 클래스를 사용하여 스키마를 정의하고 TypeScript 데코레이터를 사용하여 해당 클래스의 field에 주석을 추가합니다.  
 https://docs.nestjs.com/graphql/resolvers#object-types
-
-GraphQL Playground (샌드박스용)  
-https://studio.apollographql.com/sandbox/explorer
-
-GraphQL Playground IDE  
-https://github.com/graphql/graphql-playground#installation
 
 ## Args decorator
 
@@ -91,9 +86,105 @@ https://docs.nestjs.com/graphql/mutations#code-first
 `@Args('createRestaurantInput') createRestaurantInput: createRestaurantInput  `
 
 @ArgsType사용  
-`@Args() createRestaurantInput: CreateRestaurantInput`
+`@Args() createRestaurantInput: CreateResta urantInput`
 
-## class-validator, class-transformer 설치
+## Validating Args Types
+
+class-validator, class-transformer 설치
 
 `  npm i class-validator class-transformer
  `
+
+# 3 DATABASE CONFIGURATION
+
+## TypeORM AND PostgreSQL
+
+TypeORM  
+https://typeorm.io/#/
+
+Postgres.app  
+https://postgresapp.com/
+
+Postico  
+https://eggerapps.at/postico
+
+## TypeORM
+
+TypeORM은 NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, NativeScript, Expo 및 Electron 플랫폼에서 실행할 수 있는 ORM이며 TypeScript 및 JavaScript(ES5, ES6, ES7, ES8)와 함께 사용할 수 있습니다.  
+https://github.com/typeorm/typeorm
+
+Database  
+Nest는 데이터베이스에 구애받지 않으므로 모든 SQL 또는 NoSQL 데이터베이스와 쉽게 통합할 수 있습니다.  
+https://docs.nestjs.com/techniques/database
+
+TypeORM Integration  
+SQL 및 NoSQL 데이터베이스와의 통합을 위해 Nest는 **@nestjs/typeorm** 패키지를 제공합니다.  
+Nest는 TypeScript에서 사용할 수 있는 가장 성숙한 ORM(Object Relational Mapper)이기 때문에 TypeORM을 사용합니다.  
+TypeScript로 작성되었기 때문에 Nest 프레임워크와 잘 통합됩니다.
+
+설치
+
+    npm install --save @nestjs/typeorm typeorm pg
+
+_Warning_  
+synchronize: true은 production에서 사용하면 안됩니다.  
+그렇지 않으면 production 데이터가 손실될 수 있습니다.
+
+## Configuration
+
+응용 프로그램은 종종 다른 환경에서 실행됩니다. 환경에 따라 다른 구성 설정을 사용해야 합니다.  
+Nest에서 이 기술을 사용하는 좋은 방법은 적절한 .env 파일을 로드하는 ConfigService를 노출하는 ConfigModule을 만드는 것입니다.
+
+```
+npm i @nestjs/config --save
+"start:dev": "cross-env NODE_ENV=dev nest start --watch",
+```
+
+https://docs.nestjs.com/techniques/configuration
+
+**cross-env**  
+cross-env를 통해 가상변수를 설정할 수 있습니다.
+NODE_ENV=production으로 환경 변수를 설정하면 대부분의 Windows 명령 프롬프트가 인식합니다. cross-env를 사용하면 플랫폼에 맞게 환경 변수를 설정하거나 사용하는 것에 대해 걱정하지 않고 단일 명령을 사용할 수 있습니다. POSIX 시스템에서 실행되는 것처럼 설정하기만 하면 cross-env가 적절하게 설정합니다.  
+`npm i cross-env `
+https://www.npmjs.com/package/cross-env
+
+## ConfigModule
+
+**env.dev**
+
+```
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+```
+
+**ConfigModule.forRoot({})**
+
+```
+host: process.env.DB_HOST,
+port: +process.env.DB_PORT,
+username: process.env.DB_USERNAME,
+password: process.env.DB_PASSWORD,
+database: process.env.DB_NAME,
+```
+
+## Validating ConfigModule
+
+**Joi**  
+JavaScript용 가장 강력한 스키마 설명 언어 및 데이터 유효성 검사기.
+
+    npm i joi
+    import  *  as  Joi  from  'joi';
+
+https://joi.dev/api/?v=17.4.2  
+https://www.npmjs.com/package/joi
+
+**Schema validation**
+Joi 내장 유효성 검사기. Joi를 사용하여 개체 스키마를 정의하고 이에 대해 JavaScript 개체의 유효성을 검사합니다.  
+https://docs.nestjs.com/techniques/configuration#schema-validation
+
+**validationOptions**  
+allowUnknown: 환경 변수에 알 수 없는 키를 허용할지 여부를 제어합니다. 기본값은 true입니다.  
+abortEarly: true인 경우 첫 번째 오류에서 유효성 검사를 중지합니다. 거짓이면 모든 오류를 반환합니다. 기본값은 false입니다.
