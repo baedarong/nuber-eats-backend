@@ -188,3 +188,11 @@ https://docs.nestjs.com/techniques/configuration#schema-validation
 **validationOptions**  
 allowUnknown: 환경 변수에 알 수 없는 키를 허용할지 여부를 제어합니다. 기본값은 true입니다.  
 abortEarly: true인 경우 첫 번째 오류에서 유효성 검사를 중지합니다. 거짓이면 모든 오류를 반환합니다. 기본값은 false입니다.
+
+## 4 TYPEORM AND NEST
+
+## TypeORM Entity
+
+Entity는 **데이터베이스 테이블**(또는 MongoDB를 사용할 때 컬렉션)에 매핑되는 클래스입니다. 새 클래스를 정의하고 @Entity()로 표시하여 엔터티를 만들 수 있습니다. 기본 엔터티는 열과 관계로 구성됩니다. 각 엔터티에는 기본 열(또는 MongoDB를 사용하는 경우 ObjectId 열)이 있어야 합니다(MUST). @PrimaryGeneratedColumn()
+
+https://typeorm.io/#/entities
