@@ -55,7 +55,7 @@ GraphQL 스키마의 대부분의 정의는 object types입니다.
 이 경우 code first 접근 방식을 사용하여 TypeScript 클래스를 사용하여 스키마를 정의하고 TypeScript 데코레이터를 사용하여 해당 클래스의 field에 주석을 추가합니다.  
 https://docs.nestjs.com/graphql/resolvers#object-types
 
-## Args decorator
+## Args decorator (@Args)
 
 @Args() 데코레이터를 사용하여 메서드 핸들러에서 사용할 요청에서 인수를 추출합니다. 이것은 REST 경로 매개변수 인수 추출과 매우 유사한 방식으로 작동합니다.
 
@@ -80,7 +80,7 @@ export class UpvotePostInput {
 
 https://docs.nestjs.com/graphql/mutations#code-first
 
-## Input Type과 ArgsType의 차이점
+## Input Type과 ArgsType (@ArgsType) 의 차이점
 
 @InputType사용  
 `@Args('createRestaurantInput') createRestaurantInput: createRestaurantInput  `
@@ -88,7 +88,7 @@ https://docs.nestjs.com/graphql/mutations#code-first
 @ArgsType사용  
 `@Args() createRestaurantInput: CreateResta urantInput`
 
-## Validating Args Types
+## Validating Args Types (TIP)
 
 class-validator, class-transformer 설치
 
@@ -170,7 +170,7 @@ password: process.env.DB_PASSWORD,
 database: process.env.DB_NAME,
 ```
 
-## Validating ConfigModule
+## Validating ConfigModule (TIP)
 
 **Joi**  
 JavaScript용 가장 강력한 스키마 설명 언어 및 데이터 유효성 검사기.
@@ -193,6 +193,47 @@ abortEarly: true인 경우 첫 번째 오류에서 유효성 검사를 중지합
 
 ## TypeORM Entity
 
-Entity는 **데이터베이스 테이블**(또는 MongoDB를 사용할 때 컬렉션)에 매핑되는 클래스입니다. 새 클래스를 정의하고 @Entity()로 표시하여 엔터티를 만들 수 있습니다. 기본 엔터티는 열과 관계로 구성됩니다. 각 엔터티에는 기본 열(또는 MongoDB를 사용하는 경우 ObjectId 열)이 있어야 합니다(MUST). @PrimaryGeneratedColumn()
+Entity는 **데이터베이스 테이블**(또는 MongoDB를 사용할 때 컬렉션)에 매핑되는 클래스입니다. 새 클래스를 정의하고 @Entity()로 표시하여 엔터티를 만들 수 있습니다. 기본 엔터티는 열과 관계로 구성됩니다. 각 엔터티에는 기본 열(또는 MongoDB를 사용하는 경우 ObjectId 열)이 있어야 합니다(MUST). _@PrimaryGeneratedColumn()_
 
 https://typeorm.io/#/entities
+
+## Active Record VS Data Mapper
+
+**Active Record** 패턴은 모델 내에서 데이터베이스에 액세스하는 접근 방식입니다.
+
+```
+// example how to save AR entity
+const user = new User();
+user.firstName = "Timber";
+user.isActive = true;
+await user.save();
+const users = await User.find({ skip: 2, take: 5 });
+```
+
+**Data Mapper** 패턴은 모델 대신 리포지토리 내의 데이터베이스에 액세스하는 접근 방식입니다. 데이터 매퍼 접근 방식을 사용하여 "리포지토리"라는 별도의 클래스에서 모든 쿼리 메서드를 정의하고 리포지토리를 사용하여 객체를 저장, 제거 및 로드합니다.  
+데이터 매퍼에서 엔터티는 매우 멍청합니다.객체는 속성을 정의하고 일부 "더미" 메서드가 있을 수 있습니다.
+
+```
+const userRepository = connection.getRepository(User);
+
+// example how to save DM entity
+const user = new User();
+user.firstName = "Timber";
+user.isActive = true;
+await userRepository.save(user);
+const users = await userRepository.find({ skip: 2, take: 5 });
+```
+
+https://typeorm.io/#/active-record-data-mapper
+
+## Injecting The Repository
+
+**Repository Pattern**  
+TypeORM은 repository design pattern,을 지원하므로 각 엔터티에는 자체 저장소가 있습니다.  
+이러한 리포지토리는 데이터베이스 연결에서 얻을 수 있습니다.  
+TypeOrmModule.forFeature() 메서드를 사용하여 엔티티를 현재 범위(현재 module)에 등록될 저장소를 imports합니다. @InjectRepository() 데코레이터를 사용하여 UsersRepository를 UsersService에 주입할 수 있습니다.  
+https://docs.nestjs.com/techniques/database#repository-pattern
+
+NestJS Repository  
+https://docs.nestjs.com/recipes/sql-typeorm  
+https://docs.nestjs.com/recipes/mikroorm#repositories
