@@ -1,12 +1,13 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeOrmConfig from 'typeorm.config';
 import { ConfigModule } from '@nestjs/config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
 
+import typeOrmConfig from 'typeorm.config';
+import { validationConfig } from 'validation.config';
+
+import { RestaurantsModule } from './restaurants/restaurants.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
@@ -14,14 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       envFilePath: process.env.NODE_ENV === 'prod' ? '.env.prod' : '.env.dev',
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.string().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_NAME: Joi.string().required(),
-      }),
+      validationSchema: validationConfig,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
