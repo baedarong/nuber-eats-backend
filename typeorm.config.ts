@@ -10,8 +10,8 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  logging: true,
-  synchronize: process.env.NODE_ENV === 'dev' ? true : false,
+  logging: process.env.NODE_ENV !== 'prod',
+  synchronize: process.env.NODE_ENV !== 'prod',
   namingStrategy: new SnakeNamingStrategy(),
   entities: [Restaurant],
 };

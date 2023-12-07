@@ -13,12 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
-      envFilePath:
-        process.env.NODE_ENV === 'dev'
-          ? '.env.dev'
-          : process.env.NODE_ENV === 'prod'
-            ? '.env.prod'
-            : '.env.test',
+      envFilePath: process.env.NODE_ENV === 'prod' ? '.env.prod' : '.env.dev',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod').required(),
         DB_HOST: Joi.string().required(),
