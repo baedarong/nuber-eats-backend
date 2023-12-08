@@ -2,25 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Restaurant } from './entities/restaurants.entity';
 import { Repository } from 'typeorm';
-import { createRestaurantDTO } from './dtos/restaurants.dto';
+import {
+  CreateRestaurantDTO,
+  UpdateRestaurantDTO,
+} from './dtos/restaurants.dto';
 
 @Injectable()
 export class RestaurantsService {
   constructor(
     @InjectRepository(Restaurant)
-    private readonly restaurant: Repository<Restaurant>,
+    private readonly restaurants: Repository<Restaurant>,
   ) {}
 
   getAll(): Promise<Restaurant[]> {
-    return this.restaurant.find();
+    return this.restaurants.find();
   }
 
   createRestaurant(
-    createRestaurantDTO: createRestaurantDTO,
+    CreateRestaurantDTO: CreateRestaurantDTO,
   ): Promise<Restaurant> {
-    // js object create
-    const newRestaurant = this.restaurant.create(createRestaurantDTO);
-    // server save
-    return this.restaurant.save(newRestaurant);
+    const newRestaurant = this.restaurants.create(CreateRestaurantDTO); // js object create
+    return this.restaurants.save(newRestaurant); // server save
+  }
+
+  updateRestaurant({ id, data }: UpdateRestaurantDTO) {
+    return this.restaurants.update(id, { ...data });
   }
 }

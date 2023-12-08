@@ -1,5 +1,24 @@
-import { InputType, OmitType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  InputType,
+  OmitType,
+  PartialType,
+} from '@nestjs/graphql';
 import { Restaurant } from '../entities/restaurants.entity';
+import { type } from 'os';
 
 @InputType()
-export class createRestaurantDTO extends OmitType(Restaurant, ['id']) {}
+export class CreateRestaurantDTO extends OmitType(Restaurant, ['id']) {}
+
+@InputType()
+class UpdateRestaurantInputType extends PartialType(CreateRestaurantDTO) {}
+
+@InputType()
+export class UpdateRestaurantDTO {
+  @Field((type) => Number)
+  id: number;
+
+  @Field((type) => UpdateRestaurantInputType)
+  data: UpdateRestaurantInputType;
+}
