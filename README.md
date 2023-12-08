@@ -237,3 +237,43 @@ https://docs.nestjs.com/techniques/database#repository-pattern
 NestJS Repository  
 https://docs.nestjs.com/recipes/sql-typeorm  
 https://docs.nestjs.com/recipes/mikroorm#repositories
+
+## Create
+
+**create()**  
+엔티티 생성  
+새 엔티티 인스턴스를 만들고 이 개체의 모든 엔터티 속성을 새 엔티티에 복사합니다. 엔터티 스키마에 있는 속성만 복사합니다. 자바스크립트 오브젝트를 만들 때 사용합니다.  
+**save()**  
+엔티티를 데이터베이스에 저장 또는 업데이트  
+데이터베이스에 지정된 모든 엔터티를 저장합니다. 엔티티가 데이터베이스에 없으면 삽입하고, 그렇지 않으면 업데이트합니다. 서버에 업데이트 할 때 사용합니다.
+
+     // restaurant.service.ts
+       createRestaurant(createRestaurantDTO:  createRestaurantDTO):  Promise<Restaurant> {
+
+const newRestaurant = this.restaurant.create(createRestaurantDTO); // js object create
+return this.restaurant.save(newRestaurant); // server save
+}
+
+https://typeorm.io/#/undefined/save-a-one-to-one-relation
+
+## Mapped types
+
+_주의_ 이 장은 code first 접근 방식에만 적용됩니다.
+CRUD(Create/Read/Update/Delete)와 같은 기능을 구축할 때 기본 엔터티 유형에 대한 변형을 구성하는 작업이 종종 존재합니다. Nest는 이 작업을 보다 편리하게 하기 위해 유형 변환을 수행하는 여러 유틸리티 함수를 제공합니다.
+
+**종류: - Partial, Pick, Omit, Intersection, Composition**
+Mapped types들을 사용하기 위해서는 @InputType 데코레이터로 선언되야 하고, 따로 지정하지 않으면 부모 클래스와 동일한 데코레이터를 사용합니다.
+
+부모 클래스와 자식 클래스가 다른 경우(예: 부모가 @ObjectType으로 선언된 경우) 두 번째 인수로 InputType을 전달해서 자식 클래스에게 @InputType데코레이터를 사용하도록 한다.  
+또는 @InputType({ isAbstract: true })을 지정하여 현재 클래스를 GraphQL스키마에 추가하지 않고, 어딘가에 복사해서 쓰는 용도로만 사용하도록 지정한다.
+
+```
+@InputType()
+export class UpdateUserInput extends PartialType(User, InputType) {}
+export class CreateRestaurantInput extends OmitType(Restaurant, ['id']) {}
+```
+
+---
+
+https://docs.nestjs.com/graphql/mapped-types  
+
