@@ -6,7 +6,6 @@ import {
   PartialType,
 } from '@nestjs/graphql';
 import { Restaurant } from '../entities/restaurants.entity';
-import { type } from 'os';
 
 @InputType()
 export class CreateRestaurantDTO extends OmitType(Restaurant, ['id']) {}

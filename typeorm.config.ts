@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import { Food } from 'src/foods/entities/foods.entities';
 
 const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -13,7 +14,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   logging: process.env.NODE_ENV !== 'prod',
   synchronize: process.env.NODE_ENV !== 'prod',
   namingStrategy: new SnakeNamingStrategy(),
-  entities: [Restaurant],
+  entities: [Restaurant, Food],
 };
 
 export default typeOrmConfig;

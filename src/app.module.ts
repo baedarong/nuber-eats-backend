@@ -8,6 +8,7 @@ import typeOrmConfig from 'typeorm.config';
 import { validationConfig } from 'validation.config';
 
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { FoodsModule } from './foods/foods.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
@@ -22,6 +23,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       autoSchemaFile: true,
     }),
     RestaurantsModule,
+    FoodsModule,
   ],
   controllers: [],
   providers: [],
