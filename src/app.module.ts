@@ -9,6 +9,8 @@ import { validationConfig } from 'validation.config';
 
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { FoodsModule } from './foods/foods.module';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
@@ -24,6 +26,8 @@ import { FoodsModule } from './foods/foods.module';
     }),
     RestaurantsModule,
     FoodsModule,
+    UsersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
