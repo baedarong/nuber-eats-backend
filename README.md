@@ -234,6 +234,19 @@ TypeORM은 repository design pattern,을 지원하므로 각 엔터티에는 자
 TypeOrmModule.forFeature() 메서드를 사용하여 엔티티를 현재 범위(현재 module)에 등록될 저장소를 imports합니다. @InjectRepository() 데코레이터를 사용하여 UsersRepository를 UsersService에 주입할 수 있습니다.  
 https://docs.nestjs.com/techniques/database#repository-pattern
 
+```
+@Injectable()
+
+export  class  UsersService {
+	constructor(@InjectRepository(User) private  readonly  users:  Repository<User>) {}
+}
+```
+
+(보너스) constructor 사용 시 private, readonly 둘 다 사용하는 이유
+
+1. **private** is to make the property private so no other class can access it
+2. **readonly** make the property read only so no method inside the class can override it by accident.
+
 NestJS Repository  
 https://docs.nestjs.com/recipes/sql-typeorm  
 https://docs.nestjs.com/recipes/mikroorm#repositories
@@ -264,18 +277,6 @@ CRUD(Create/Read/Update/Delete)와 같은 기능을 구축할 때 기본 엔터�
 **종류: - Partial, Pick, Omit, Intersection, Composition**
 Mapped types들을 사용하기 위해서는 @InputType 데코레이터로 선언되야 하고, 따로 지정하지 않으면 부모 클래스와 동일한 데코레이터를 사용합니다.
 
-**Partial**
-Entity 모든 필드를 선택사항으로 바꾼다.동일한 Entity유형에서 변형을 만들어 부분적으로 선택하여 형태를 전달 할 수 있도록한다.
-
-**Pick**
-Pick 은 해당 입력 유형해서 속성 집합을 선택하여 새로운 유형(클래스)를 생성한다.
-
-**Omit**
-Omit 는 입력 유형에서 모든 속성을 선택한다음 특정 필드만 제거하여 유형을 구성한다.
-
-**Intersection**
-두개의 Entity 를 하나의 타입으로 만들어 사용한다.
-
 부모 클래스와 자식 클래스가 다른 경우(예: 부모가 @ObjectType으로 선언된 경우) 두 번째 인수로 InputType을 전달해서 자식 클래스에게 @InputType데코레이터를 사용하도록 한다.  
 또는 @InputType({ isAbstract: true })을 지정하여 현재 클래스를 GraphQL스키마에 추가하지 않고, 어딘가에 복사해서 쓰는 용도로만 사용하도록 지정한다.
 
@@ -296,3 +297,51 @@ https://docs.nestjs.com/graphql/mapped-types
     updateRestaurant({ id, data }:  UpdateRestaurantDTO) {
         return  this.restaurants.update(id, { ...data });
     }
+
+# 5 USER CRUD
+
+## TypeORM special columns
+
+추가 기능을 사용할 수 있는 몇 가지 Special columns들이 있습니다.
+
+**@CreateDateColumn**은 엔터티의 삽입 날짜로 자동 설정되는 특수 열입니다. 이 열은 설정할 필요가 없습니다. 자동으로 설정됩니다.
+
+**@UpdateDateColumn**은 entity manager 또는 repository의 저장을 호출할 때마다 엔티티의 업데이트 시간으로 자동 설정되는 특수 컬럼입니다. 이 열은 설정할 필요가 없습니다. 자동으로 설정됩니다.
+
+**@DeleteDateColumn**은 entity manager 또는 repository의 일시 삭제를 호출할 때마다 엔터티의 삭제 시간으로 자동 설정되는 특수 열입니다. 이 열은 설정할 필요가 없습니다. 자동으로 설정됩니다. @DeleteDateColumn이 설정되면 기본 범위는 "삭제되지 않음"이 됩니다.
+
+https://typeorm.io/#/entities/special-columns
+
+## Entity Listeners and Subscribers
+
+모든 엔터티에는 **특정 엔터티 이벤트를 listen하는 커스텀 로직 메서드**를 가질 수 있습니다.  
+그래서 listen하려는 이벤트를 메서드에 특별한 데코레이터로 마크해줍니다.  
+주의! _listener 내에서 데이터베이스 호출을 수행하지 말고, 대신 subscribers를 사용하십시오._  
+https://typeorm.io/#/listeners-and-subscribers
+
+**@BeforeInsert**  
+엔터티를 데이터베이스에 삽입 전에 이 데코레이터가 적용되면 해당 메서드를 호출합니다.  
+엔티티에 메소드를 정의하고 @BeforeInsert 데코레이터로 표시하면,
+TypeORM은 엔티티가 repository/manager save를 사용하여 insert되기 전에 이 메서드를 호출합니다.  
+ex) mongoose에서 pre save처럼 DB에 저장되기 전에 실행되는 함수
+
+```
+@BeforeInsert()
+updateDates() {
+	this.createdDate = new Date();
+}
+```
+
+https://typeorm.io/#/listeners-and-subscribers/beforeinsert
+
+**bcrypt**
+
+```
+npm i bcrypt
+npm i @types/bcrypt -D
+```
+
+https://www.npmjs.com/package/bcrypt
+
+_[주의]_ import \* as bcrypt from 'bcrypt';가 아닌 import bcrypt from 'bcrypt';로 import하게 되면
+bcrypt에 함수가 아닌 undefined가 담겨 hash함수가 제대로 동작하지 않으므로 모듈 import 주의

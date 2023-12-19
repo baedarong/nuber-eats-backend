@@ -1,8 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-
-import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { Food } from 'src/foods/entities/foods.entities';
 import { User } from 'src/users/entities/user.entity';
 
 const typeOrmConfig: TypeOrmModuleOptions = {
@@ -15,7 +12,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   logging: process.env.NODE_ENV !== 'prod',
   synchronize: process.env.NODE_ENV !== 'prod',
   namingStrategy: new SnakeNamingStrategy(),
-  entities: [Restaurant, Food, User],
+  entities: [User],
 };
 
 export default typeOrmConfig;
