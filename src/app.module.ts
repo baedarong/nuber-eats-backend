@@ -24,8 +24,6 @@ import { CommonModule } from './common/common.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
-    RestaurantsModule,
-    FoodsModule,
     UsersModule,
     CommonModule,
   ],
