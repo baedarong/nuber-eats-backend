@@ -7,4 +7,5 @@ export const validationConfig = Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  SECRET_KEY: Joi.string().required(),
 });

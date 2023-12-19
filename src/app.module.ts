@@ -7,8 +7,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import typeOrmConfig from 'typeorm.config';
 import { validationConfig } from 'validation.config';
 
-import { RestaurantsModule } from './restaurants/restaurants.module';
-import { FoodsModule } from './foods/foods.module';
 import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
 @Module({
